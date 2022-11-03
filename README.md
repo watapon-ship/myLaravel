@@ -61,7 +61,7 @@ composer -V
 php -m
 
 ### Laravelプロジェクト作成
-$ composer create-project "laravel/laravel=9" app-web
+$ composer create-project laravel/laravel app-web
 
 $ composer create-project "laravel/laravel=9" app-bacth
 
