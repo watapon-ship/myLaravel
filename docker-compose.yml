@@ -1,0 +1,57 @@
+version: '3'
+services:
+
+# 作業スペース
+  workspace:
+    build: ./lib/php
+    volumes:
+      - ./src:/var/www/html
+
+# Webサーバー
+  web:
+    image: nginx:1.15.6
+    ports:
+      - 8000:80
+    volumes:
+      - ./lib/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./src:/var/www/html
+    depends_on:
+      - workspace
+
+# MySQLサーバー
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-data
+    environment:
+      MYSQL_DATABASE: workdb
+      MYSQL_USER: phper
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: root
+      TZ: "Asia/Tokyo"
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - ./lib/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./lib/mysql/initdb.d:/docker-entrypoint-initdb.d
+      - db-data:/var/lib/mysql
+    ports:
+      - 3306:3306
+
+# 不要
+#      - ./lib/mysql/db:/var/lib/mysql
+
+
+# # phpmyadmin
+#   phpmyadmin:
+#     container_name: phpmyadmin
+#     image: phpmyadmin/phpmyadmin
+#     environment:
+#     - PMA_ARBITRARY=1
+#     - PMA_HOSTS=mysql-data
+#     - PMA_USER=root
+#     - PMA_PASSWORD=root
+#     ports:
+#     - 8080:80
+
+volumes:
+  db-data:
+    driver: local
