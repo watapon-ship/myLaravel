@@ -109,3 +109,6 @@ apt-get install -y nodejs
 
 ## package.jsonの内容に依存したパッケージをインストールし、コンパイルします。(npmがない)
 npm install && npm run dev
+
+
+テスト
